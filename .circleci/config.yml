@@ -39,8 +39,7 @@ jobs:
           command: |
             docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
             docker build -t captsone-project:1.0 .
-            docker image ls
-            docker push 1.0
+            docker push capstone-project:1.0
 
 workflows:
   default:
