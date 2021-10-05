@@ -40,3 +40,11 @@ jobs:
             docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
             docker build -t captsone-project1:1.0 .
             docker push capstone-project1:1.0
+
+workflows:
+  default:
+    jobs:
+      - lint
+      - build-docker-image:
+          requires:
+            - lint
