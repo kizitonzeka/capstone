@@ -38,7 +38,8 @@ jobs:
           name: build and push docker image
           command: |
             docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-            docker build -t kizitonzeka/captsone-project:1.0 .
+            docker build --tag=capstone-project .
+            docker tag capstone-project kizitonzeka/capstone-project:1.0
             docker push kizitonzeka/capstone-project:1.0
 
 workflows:
