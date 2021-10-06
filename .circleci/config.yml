@@ -85,6 +85,10 @@ jobs:
   test-cluster:
     executor: aws-eks/python3
     parameters:
+      aws-region:
+        description: |
+          AWS region that the EKS cluster will be created in.
+        type: string    
       cluster-name:
         description: capstone
         type: string
@@ -92,6 +96,7 @@ jobs:
       - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
+          aws-region: <<parameters.aws-region>>
       - run:
           name: Kube cluster
           command: |
@@ -101,14 +106,15 @@ workflows:
   default:
     jobs:
       - lint
-      - build-docker-image:
-          requires:
-            - lint
-      - create-eks-cluster:
-          cluster-name: capstone
-          aws-region: us-west-2
+      # - build-docker-image:
+      #     requires:
+      #       - lint
+      # - create-eks-cluster:
+      #     cluster-name: capstone
+      #     aws-region: us-west-2
       - test-cluster: 
           cluster-name: capstone
-          requires: 
-            - create-eks-cluster
+          aws-region: us-west-2
+          # requires: 
+          #   - create-eks-cluster
 
