@@ -104,5 +104,5 @@ workflows:
       - test-cluster: 
           cluster-name: capstone
           requires: 
-            - create-cluster
+            - create-eks-cluster
 
