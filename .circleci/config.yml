@@ -45,8 +45,12 @@ jobs:
   create-eks-cluster:
     executor: aws-eks/python3
     parameters:
+      aws-region:
+        description: |
+          AWS region that the EKS cluster will be created in.
+        type: string      
       cluster-name:
-        description: capstone
+        description:  Name of the EKS cluster to be created
         type: string
     steps:
       - checkout
@@ -69,6 +73,7 @@ jobs:
             $SUDO mv eksctl_download/eksctl /usr/local/bin/
             rmdir eksctl_download
       - aws-eks/create-cluster:
+          aws-region: <<parameters.aws-region>>
           cluster-name: << parameters.cluster-name >>
           skip-kubectl-install: false
           verbose: 3
@@ -101,6 +106,7 @@ workflows:
             - lint
       - create-eks-cluster:
           cluster-name: capstone
+          aws-region: us-west-2
       - test-cluster: 
           cluster-name: capstone
           requires: 
