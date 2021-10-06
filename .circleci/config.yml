@@ -102,7 +102,7 @@ jobs:
           command: |
             kubectl get services
 
-   create-deployment:
+  create-deployment:
     executor: aws-eks/python3
     parameters:
       aws-region:
