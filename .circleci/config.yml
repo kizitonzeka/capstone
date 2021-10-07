@@ -144,41 +144,32 @@ jobs:
             kubectl get nodes
             kubectl get deployment
 
-  delete-stack:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Delete cloudformation stack
-          command: |
-              aws cloudformation delete-stack --stack-name eksctl-capstone-cluster
 
 workflows:
   default:
     jobs:
-      # - lint
-      # - build-docker-image:
-      #     requires:
-      #       - lint
-      # - create-eks-cluster:
-      #     cluster-name: capstone
-      #     aws-region: us-west-2
-      # - test-cluster: 
-      #     cluster-name: capstone
-      #     aws-region: us-west-2
-      #     requires: 
-      #       - create-eks-cluster
-      # - create-deployment:
-      #     cluster-name: capstone
-      #     aws-region: us-west-2
-      #     requires: [build-docker-image, test-cluster]
-      # - test-deployment:
-      #     cluster-name: capstone
-      #     aws-region: us-west-2
-      #     requires: [create-deployment]
+      - lint
+      - build-docker-image:
+          requires:
+            - lint
+      - create-eks-cluster:
+          cluster-name: capstone
+          aws-region: us-west-2
+      - test-cluster: 
+          cluster-name: capstone
+          aws-region: us-west-2
+          requires: 
+            - create-eks-cluster
+      - create-deployment:
+          cluster-name: capstone
+          aws-region: us-west-2
+          requires: [build-docker-image, test-cluster]
+      - test-deployment:
+          cluster-name: capstone
+          aws-region: us-west-2
+          requires: [create-deployment]
 
-      - delete-stack
+  
           
       
 
