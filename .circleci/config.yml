@@ -144,39 +144,15 @@ jobs:
             kubectl get nodes
             kubectl get deployment
 
-  delete-cluster:
-    executor: aws-eks/python3
-    parameters:
-      aws-region:
-        description: |
-          AWS region that the EKS cluster will be created in.
-        type: string  
-      cluster-name:
-        description: Name of the EKS cluster to be created
-        type: string
+  delete-stack:
+    docker:
+      - image: amazon/aws-cli
     steps:
       - checkout
-      - aws-eks/install-aws-iam-authenticator:
-          release-tag: ''
       - run:
-          name: Install the eksctl tool
+          name: Delete cloudformation stack
           command: |
-            if which eksctl > /dev/null; then
-            echo "eksctl is already installed"
-            exit 0
-            fi
-            mkdir -p eksctl_download
-            curl --silent --location --retry 5 "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C eksctl_download
-            chmod +x eksctl_download/eksctl
-            SUDO=""
-            if [ $(id -u) -ne 0 ] && which sudo > /dev/null ; then
-            SUDO="sudo"
-            fi
-            $SUDO mv eksctl_download/eksctl /usr/local/bin/
-            rmdir eksctl_download
-      - aws-eks/delete-cluster:
-          cluster-name: <<parameters.cluster-name>>
-          aws-region: <<parameters.aws-region>>
+              aws cloudformation delete-stack --stack-name eksctl-capstone-cluster
 
 workflows:
   default:
@@ -202,9 +178,7 @@ workflows:
       #     aws-region: us-west-2
       #     requires: [create-deployment]
 
-      - delete-cluster:
-          cluster-name: capstone
-          aws-region: us-west-2
+      - delete-stack
           
       
 
